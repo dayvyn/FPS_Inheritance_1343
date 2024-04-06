@@ -11,7 +11,7 @@ public class Shotgun : Gun
     {
         if (!base.AttemptFire())
             return false;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 8; i++)
         {
             Vector3 spread;
             spread.x = Random.Range(-i, i);
