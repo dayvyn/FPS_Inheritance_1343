@@ -3,37 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Projectile : MonoBehaviour
+public class EnergyBlast : MonoBehaviour
 {
     float damageAmount;
     float speed;
     float knockback;
     float lifetime;
     UnityAction<HitData> OnHit;
+    [SerializeField] ParticleSystem energy;
+    ParticleSystem.MainModule mainParticle;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        mainParticle = energy.main;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
-    public void Initialize(float damage, float velocity, float life, float force, UnityAction<HitData> onHit)
+    public void InitializeBlast(float damage, float velocity, float life, float force, UnityAction<HitData> onHit, Color color)
     {
         damageAmount = damage;
         speed = velocity;
         lifetime = life;
         knockback = force;
         OnHit += onHit;
+        mainParticle.startColor = color;
+
 
         GetComponent<Rigidbody>().velocity = transform.forward * speed;
         Destroy(gameObject, lifetime);
-        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -56,11 +53,11 @@ public class Projectile : MonoBehaviour
         }
         Destroy(gameObject);
     }
-}
 
-public class HitData
-{
-    public Vector3 location;
-    public Vector3 direction;
-    public Damageable target;
+    public class HitData
+    {
+        public Vector3 location;
+        public Vector3 direction;
+        public Damageable target;
+    }
 }

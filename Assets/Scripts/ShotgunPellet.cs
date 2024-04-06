@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Projectile : MonoBehaviour
+public class ShotgunPellet : MonoBehaviour
 {
     float damageAmount;
     float speed;
@@ -11,19 +11,11 @@ public class Projectile : MonoBehaviour
     float lifetime;
     UnityAction<HitData> OnHit;
 
-    // Start is called before the first frame update
-    void Start()
+    void ShotgunBlast()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
-
-    public void Initialize(float damage, float velocity, float life, float force, UnityAction<HitData> onHit)
+    public void InitializeShotgun(float damage, float velocity, float life, float force, UnityAction<HitData> onHit)
     {
         damageAmount = damage;
         speed = velocity;
@@ -33,7 +25,6 @@ public class Projectile : MonoBehaviour
 
         GetComponent<Rigidbody>().velocity = transform.forward * speed;
         Destroy(gameObject, lifetime);
-        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -56,11 +47,11 @@ public class Projectile : MonoBehaviour
         }
         Destroy(gameObject);
     }
-}
 
-public class HitData
-{
-    public Vector3 location;
-    public Vector3 direction;
-    public Damageable target;
+    public class HitData
+    {
+        public Vector3 location;
+        public Vector3 direction;
+        public Damageable target;
+    }
 }

@@ -190,17 +190,17 @@ public class FPSController : MonoBehaviour
 
     // Input methods
 
-    bool GetPressFire()
+    public virtual bool GetPressFire()
     {
         return Input.GetButtonDown("Fire1");
     }
 
-    bool GetHoldFire()
+    public virtual bool GetHoldFire()
     {
         return Input.GetButton("Fire1");
     }
 
-    bool GetPressAltFire()
+    public virtual bool GetPressAltFire()
     {
         return Input.GetButtonDown("Fire2");
     }

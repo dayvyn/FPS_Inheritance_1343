@@ -28,7 +28,7 @@ public class Gun : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
         elapsed += Time.deltaTime;
 
@@ -81,4 +81,5 @@ public class Gun : MonoBehaviour
         if (ammo > maxAmmo)
             ammo = maxAmmo;
     }
+    
 }
