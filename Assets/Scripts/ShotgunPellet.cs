@@ -10,11 +10,6 @@ public class ShotgunPellet : MonoBehaviour
     float knockback;
     float lifetime;
     UnityAction<HitData> OnHit;
-
-    void ShotgunBlast()
-    {
-
-    }
     public void InitializeShotgun(float damage, float velocity, float life, float force, UnityAction<HitData> onHit)
     {
         damageAmount = damage;

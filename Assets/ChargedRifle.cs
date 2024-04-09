@@ -10,11 +10,15 @@ public class ChargedRifle : Gun
     [SerializeField] ParticleSystem charge;
     [SerializeField] ParticleSystem smoke;
     ParticleSystem.MainModule ma;
-    [SerializeField] CinemachineVirtualCamera cam;
+    CinemachineBrain camBrain;
+    CinemachineVirtualCamera camActive;
     Color currentColor;
     void Start()
     {
        ma = charge.main;
+        camBrain = FindObjectOfType<CinemachineBrain>();
+        camActive = camBrain.ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
+
     }
 
     public override void Update()
@@ -118,7 +122,7 @@ public class ChargedRifle : Gun
 
     public void CameraShake(int num)
     {
-        CinemachineBasicMultiChannelPerlin perlin = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        CinemachineBasicMultiChannelPerlin perlin = camActive.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         perlin.m_AmplitudeGain = num / 1000;
     }
     void PlaySmoke()
@@ -127,7 +131,7 @@ public class ChargedRifle : Gun
     }
     public override void Unequip()
     {
-        CinemachineBasicMultiChannelPerlin perlin = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        CinemachineBasicMultiChannelPerlin perlin = camActive.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         perlin.m_AmplitudeGain = 0;
     }
     void ParticleIncrease(int particles)
