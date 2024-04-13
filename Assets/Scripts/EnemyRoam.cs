@@ -9,6 +9,7 @@ public class EnemyRoam : State
 
     }
 
+    //Attack, aggro, or Idle last since endofpath can apply with it being aggro
     public override void Do()
     {
         if (playerDetectorScript.withinAttackRange == true)

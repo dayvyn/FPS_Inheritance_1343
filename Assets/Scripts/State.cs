@@ -11,6 +11,8 @@ public class State
     protected EnemyNavigator navigatorScript;
     protected PlayerDetection playerDetectorScript;
 
+    protected float timer = 0;
+
     public virtual void Enter() { }
 
     public virtual void Do() { }

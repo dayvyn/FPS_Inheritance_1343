@@ -53,7 +53,7 @@ public class EnemyNavigator : MonoBehaviour
     {
         RoamToPoint(GetRandomPointInRange(GetStartingPoint()));
     }
-
+    //End of Path in order to swap to Idle or another state
     public bool EndOfPath()
     {
         if (navMesh.remainingDistance < 0.1)
@@ -66,6 +66,7 @@ public class EnemyNavigator : MonoBehaviour
     {
         navMesh.SetDestination(player.transform.position);
     }
+    //Forcing the zombie to look at the player whenever it jump
     public void AttackPlayer(PlayerDetection player)
     {
         transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));

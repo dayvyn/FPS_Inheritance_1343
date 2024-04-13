@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class EnemyRecovery : State
 {
-    float time = 0;
     public EnemyRecovery(Enemy enemy, EnemyStateMachine enemyStateMachine, Rigidbody enemyRB, Animator enemyAnimator, EnemyNavigator navigatorScript, PlayerDetection playerDetectorScript) : base(enemy, enemyStateMachine, enemyRB, enemyAnimator, navigatorScript, playerDetectorScript)
     {
 
     }
 
+    //Eepy time
     public override void Do()
     {
-        time += Time.deltaTime;
-        if (time > 2)
+        timer += Time.deltaTime;
+        if (timer > 2)
         {
-            time = 0;
+            timer = 0;
             enemy.StateMachine.ChangeState(enemy.RoamState);
         }
     }

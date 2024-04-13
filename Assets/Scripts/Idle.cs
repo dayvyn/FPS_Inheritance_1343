@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Idle : State
-{
-    float timeInState;
+{ 
     public Idle(Enemy enemy, EnemyStateMachine enemyStateMachine, Rigidbody enemyRB, Animator enemyAnimator, EnemyNavigator navigatorScript, PlayerDetection playerDetectorScript) : base(enemy, enemyStateMachine, enemyRB, enemyAnimator, navigatorScript, playerDetectorScript)
     {
 
@@ -17,11 +16,11 @@ public class Idle : State
 
     public override void Do()
     {
-        timeInState += Time.deltaTime;
-        if (timeInState > 2)
+        timer += Time.deltaTime;
+        if (timer > 2)
         {
+            timer = 0;
             enemy.StateMachine.ChangeState(enemy.RoamState);
-            timeInState = 0;
         }
     }
 

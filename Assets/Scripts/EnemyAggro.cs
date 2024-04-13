@@ -11,7 +11,7 @@ public class EnemyAggro : State
 
     public override void Do()
     {
-        if (playerDetectorScript.withinRange == true && playerDetectorScript.withinAttackRange == true)
+        if (playerDetectorScript.withinAttackRange == true)
         {
             enemy.StateMachine.ChangeState(enemy.AttackState);
         }

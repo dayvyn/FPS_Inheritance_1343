@@ -6,11 +6,12 @@ using UnityEngine.AI;
 public class EnemyAttack : State
 {
     NavMeshAgent agent;
-    float timer = 0;
     public EnemyAttack(Enemy enemy, EnemyStateMachine enemyStateMachine, Rigidbody enemyRB, Animator enemyAnimator, EnemyNavigator navigatorScript, PlayerDetection playerDetectorScript) : base(enemy, enemyStateMachine, enemyRB, enemyAnimator, navigatorScript, playerDetectorScript)
     {
 
     }
+    //NavMesh checks to see if there is any viable NavMesh within 3 of the agent. If not, just respawn him and then do it. Just in case my gun knocks him
+    //really far awy
     public override void Do()
     {
         timer += Time.deltaTime;
