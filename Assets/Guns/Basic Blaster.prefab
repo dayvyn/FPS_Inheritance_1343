@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 6097065174017836939}
   - component: {fileID: 6097065174017836938}
   - component: {fileID: 6097065174017836940}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Basic Blaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}

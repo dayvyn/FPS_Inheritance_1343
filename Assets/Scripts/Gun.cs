@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 // gun base class
 public class Gun : MonoBehaviour
@@ -13,16 +15,18 @@ public class Gun : MonoBehaviour
     [SerializeField] protected Animator anim;
 
     // stats
-    [SerializeField] protected int maxAmmo;
+    public virtual int maxAmmo { get; protected set; }
     [SerializeField] protected float timeBetweenShots = 0.1f;
     [SerializeField] protected bool isAutomatic = false;
 
     // private variables
-    protected int ammo;
+    public int ammo { get; protected set; }
     protected float elapsed = 0;
+    public virtual UnityAction<Gun> Fired { get; set; }
+    public virtual UnityAction<Gun> Reload { get; set; }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         ammo = maxAmmo;
     }
@@ -31,12 +35,6 @@ public class Gun : MonoBehaviour
     public virtual void Update()
     {
         elapsed += Time.deltaTime;
-
-        // cheat code to refill ammo
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            AddAmmo(999);
-        }
     }
 
     public virtual void Equip(FPSController p)
@@ -54,7 +52,7 @@ public class Gun : MonoBehaviour
         return true;
     }
 
-    public virtual bool AttemptFire()
+    public virtual bool AttemptFire(InputAction.CallbackContext ctx)
     {
         if (ammo <= 0)
         {
@@ -77,9 +75,11 @@ public class Gun : MonoBehaviour
     public virtual void AddAmmo(int amount)
     {
         ammo += amount;
-
         if (ammo > maxAmmo)
             ammo = maxAmmo;
     }
-    
+    public void SetAmmo(int value)
+    {
+        ammo = value;
+    }
 }

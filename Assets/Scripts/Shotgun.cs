@@ -2,14 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class Shotgun : Gun
 {
-    public UnityAction active;
-
-    public override bool AttemptFire()
+    Shotgun shotgunScript;
+    int _maxAmmo = 5;
+    public override UnityAction<Gun> Fired { get => base.Fired;  set => base.Fired = value; }
+    public override int maxAmmo { get { return _maxAmmo; } protected set => base.maxAmmo = _maxAmmo; }
+    public override UnityAction<Gun> Reload { get => base.Reload; set => base.Reload = value; }
+    protected override void Start()
     {
-        if (!base.AttemptFire())
+        base.Start();
+        shotgunScript = GetComponent<Shotgun>();
+    }
+
+    public override bool AttemptFire(InputAction.CallbackContext ctx)
+    {
+        if (!base.AttemptFire(ctx))
             return false;
         for (int i = 0; i < 8; i++)
         {
@@ -27,7 +37,14 @@ public class Shotgun : Gun
         anim.SetTrigger("shoot");
         elapsed = 0;
         ammo -= 1;
+        Fired.Invoke(shotgunScript);
 
         return true;
+    }
+
+    public override void AddAmmo(int amount)
+    {
+        base.AddAmmo(amount);
+        Reload.Invoke(shotgunScript);
     }
 }

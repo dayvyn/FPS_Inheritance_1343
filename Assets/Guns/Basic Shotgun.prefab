@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 7731760591580600535}
   - component: {fileID: 2893789716353447195}
   - component: {fileID: 5725351171474710935}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Basic Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}

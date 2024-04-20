@@ -1,12 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class Blaster : Gun
 {
-    public override bool AttemptFire()
+    int _maxAmmo = 10;
+    Gun blasterScript;
+    protected override void Start()
     {
-        if (!base.AttemptFire())
+        base.Start();
+        blasterScript = GetComponent<Blaster>();
+        ammo = maxAmmo;
+    }
+
+    public override int maxAmmo { get { return _maxAmmo; } protected set => base.maxAmmo = _maxAmmo; }
+
+    public override UnityAction<Gun> Fired { get => base.Fired; set => base.Fired = value; }
+
+    public override UnityAction<Gun> Reload { get => base.Reload; set => base.Reload = value; }
+
+    public override bool AttemptFire(InputAction.CallbackContext ctx)
+    {
+        if (!base.AttemptFire(ctx))
             return false;
 
         var b = Instantiate(bulletPrefab, gunBarrelEnd.transform.position, gunBarrelEnd.rotation);
@@ -16,8 +33,15 @@ public class Blaster : Gun
         anim.SetTrigger("shoot");
         elapsed = 0;
         ammo -= 1;
+        Fired.Invoke(blasterScript);
 
         return true;
+    }
+
+    public override void AddAmmo(int amount)
+    {
+        base.AddAmmo(amount);
+        Reload.Invoke(blasterScript);
     }
 
     // example function, make hit enemy fly upward

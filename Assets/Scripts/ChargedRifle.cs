@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class ChargedRifle : Gun
 {
@@ -13,66 +14,54 @@ public class ChargedRifle : Gun
     CinemachineBrain camBrain;
     CinemachineVirtualCamera camActive;
     Color currentColor;
-    void Start()
+    Coroutine FireCoroutine = null;
+    WaitForEndOfFrame _waitForEndOfFrame;
+    ChargedRifle chargedRifleScript;
+    int _maxAmmo = 1;
+
+    public override UnityAction<Gun> Fired { get => base.Fired; set => base.Fired = value; }
+    public override int maxAmmo { get { return _maxAmmo; } protected set => base.maxAmmo = _maxAmmo; }
+    public override UnityAction<Gun> Reload { get => base.Reload; set => base.Reload = value; }
+
+    protected override void Start()
     {
-       ma = charge.main;
+        base.Start();
+        ma = charge.main;
         camBrain = FindObjectOfType<CinemachineBrain>();
         camActive = camBrain.ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
-
+        _waitForEndOfFrame = new WaitForEndOfFrame();
+        chargedRifleScript = GetComponent<ChargedRifle>();
     }
-
     public override void Update()
     {
         base.Update();
-        if (Input.GetButtonUp("Fire1") && GetComponentInParent<FPSController>())
-        {
-            if (AttemptFire())
-            {
-                Fire();
-            }
-        }
     }
 
-    public override bool AttemptFire()
+    private void OnEnable()
     {
-        if (!base.AttemptFire())
+        if(GetComponentInParent<FPSController>())
+        ColorChange();
+    }
+
+    private void OnDisable()
+    {
+        FireCoroutine = null;
+    }
+
+    public override bool AttemptFire(InputAction.CallbackContext ctx)
+    {
+        if (!base.AttemptFire(ctx))
         { 
             return false;
         }
-        if (damage < 5000)
-        {
-            damage++;
-        }
-        switch(damage)
-        {
-            case 1000:
-                ChangeRed();
-                CameraShake(damage);
-                ParticleIncrease(damage);
-                break;
-            case 2000:
-                ChangeBlue();
-                CameraShake(damage);
-                ParticleIncrease(damage);
-                break;
-            case 3000:
-                ChangeGreen();
-                CameraShake(damage);
-                ParticleIncrease(damage);
-                break;
-            case 4000:
-                ChangeYellow();
-                CameraShake(damage);
-                ParticleIncrease(damage);
-                break;
-            case 5000:
-                ChangeWhite();
-                CameraShake(damage);
-                ParticleIncrease(damage);
-                break;
-        }
-
+        OnHoldFire(ctx);
         return true;
+    }
+
+    public override void AddAmmo(int amount)
+    {
+        base.AddAmmo(amount);
+        Reload.Invoke(chargedRifleScript);
     }
 
     void Fire()
@@ -87,6 +76,8 @@ public class ChargedRifle : Gun
         CameraShake(0);
         PlaySmoke();
         ParticleIncrease(0);
+        Fired.Invoke(chargedRifleScript);
+        FireCoroutine = null;
     }
 
     void ChangeRed()
@@ -137,5 +128,68 @@ public class ChargedRifle : Gun
     void ParticleIncrease(int particles)
     {
         ma.maxParticles = particles/10;
+    }
+
+    void OnHoldFire(InputAction.CallbackContext ctx)
+    {
+        if (ctx.started && FireCoroutine == null)
+        {
+            FireCoroutine = StartCoroutine(ChargeAttack());
+        }
+        return;
+
+        IEnumerator ChargeAttack()
+        {
+            Charge();
+            yield return _waitForEndOfFrame;
+            if (ctx.canceled)
+            {
+                Fire();
+                FireCoroutine = null;
+                yield break;
+            }
+            yield return new WaitUntil(ctx.ReadValueAsButton);
+            while (ctx.ReadValueAsButton())
+            {
+                Charge();
+                yield return _waitForEndOfFrame;
+            }
+            yield return _waitForEndOfFrame;
+            Fire();
+            yield return _waitForEndOfFrame;
+
+        }
+    }
+    void Charge()
+    {
+        if (damage < 5000)
+        {
+            damage++;
+        }
+        ColorChange();
+    }
+
+    void ColorChange()
+    {
+        switch (damage)
+        {
+            case 1000:
+                ChangeRed();
+                break;
+            case 2000:
+                ChangeBlue();
+                break;
+            case 3000:
+                ChangeGreen();
+                break;
+            case 4000:
+                ChangeYellow();
+                break;
+            case 5000:
+                ChangeWhite();
+                break;
+        }
+        CameraShake(damage);
+        ParticleIncrease(damage);
     }
 }
